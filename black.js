@@ -32,7 +32,84 @@ client.on("ready", async () => {
     }
   });
 });
-
+let users = JSON.parse(fs.readFileSync('./users.json' , 'utf8'));
+ 
+client.on("message", message => {
+  if (message.content.startsWith(prefix + "user")) {
+    if (!message.channel.guild)
+      return message.reply(`هذا الأمر فقط ل السيرفرات ❌`);
+    message.guild.fetchInvites().then(invs => {
+      let member = client.guilds
+        .get(message.guild.id)
+        .members.get(message.author.id);
+      let personalInvites = invs.filter(
+        i => i.inviter.id === message.author.id
+      );
+      let inviteCount = personalInvites.reduce((p, v) => v.uses + p, 0);
+      var moment = require("moment");
+      var args = message.content.split(" ").slice(1);
+      let user = message.mentions.users.first();
+      var men = message.mentions.users.first();
+        let args1 = message.content.split(" ")[1];
+  let mention = message.mentions.users.first()|| message.author || message.guild.members.cache.get(args1)
+      var heg;
+      if (men) {
+        heg = men;
+      } else {
+        heg = message.author;
+      }
+      var mentionned = message.mentions.members.first();
+      var h;
+      if (mentionned) {
+        h = mentionned;
+      } else {
+        h = message.member;
+      }
+      moment.locale("ar-TN");
+      //  users[message.author.id]
+ 
+client.on("voiceStateUpdate", (oldMember, newMember) => {
+    if(!newMember.voiceChannel) {
+        users[message.author.id] = {
+            time: (new Date).getTime()
+    }
+        }
+       fs.writeFile('users.json', JSON.stringify(users), (err) => {
+if (err) console.error(err);
+})
+});   
+ 
+var last;
+if(!users[message.author.id]) {
+if(message.member.voiceChannel) last = `Last See In Voice: \`${message.member.voiceChannel.name}\``;
+else last = `  Never Join Any Room`;
+} else last =  Math.floor(((new Date).getTime() - users[message.author.id].time) / 1000 / 60 / 60) + " Hours, " + Math.floor(((new Date).getTime() - users[message.author.id].time) / 1000 / 60 ) + " Minutes, " +  Math.floor(((new Date).getTime() - users[message.author.id].time) / 1000) + " Seconds"
+ 
+      var id = new MessageEmbed()
+      .setThumbnail(message.author.avatarURL)
+        .setColor("RANDOM")
+        .addField(
+          "Time joined discord",
+          `${moment(heg.createdTimestamp).format(
+            "YYYY/M/D HH:mm:ss"
+          )} **\n** \`${moment(heg.createdTimestamp).fromNow()}\``,
+          true
+        )
+        .addField(
+          "Time joined server",
+          `${moment(h.joinedAt).format("YYYY/M/D HH:mm:ss")} \n \`${moment(
+            h.joinedAt
+          ).fromNow()}\``,
+          true
+        )
+      .addField("Last voice",` ${last}`)
+        .addField("Invite count", inviteCount, false)
+            .setFooter(`${mention.tag}`, 'https://cdn.discordapp.com/attachments/705295880215068722/719010959691219005/ID_symbol_B-W_128x128.gif');
+ 
+      message.channel.send(id);
+    });
+  }
+});
 //////////
 
 client.on("message", async message => {
@@ -59,7 +136,7 @@ client.on("message", async message => {
 > user , avatar , roles , emoji
 ━──╮•╭──━
 ⌖| Moderation
-> , ban , kick , mute , unmute , slowmode , bans
+> , ban , kick , mute , unmute ,  bans
 > say , unban[userid/all]
 ━──╮•╭──━
 
@@ -447,7 +524,7 @@ client.on("roleCreate", async channel => {
         .ban()
         .catch(e =>
           channel.guild.owner.send(
-            `**${entry.username} قام بأنشاء الكثير من الرتب **`
+            `**${entry.username} Has created roles **`
           )
         );
       anti[channel.guild.id + entry.id].actions = "0";
@@ -509,7 +586,7 @@ client.on("guildBanAdd", async (guild, user) => {
         .cache.get(entry.id)
         .ban()
         .catch(e =>
-          guild.owner.send(`**${entry.username} حاول حظر جميع الأعضاء **`)
+          guild.owner.send(`**${entry.username} Has ban Many member**`)
         );
       anti[guild.id + entry.id].actions = 0;
       fs.writeFile("./config.json", JSON.stringify(config, null, 2), function(
@@ -571,7 +648,7 @@ client.on("guildKickAdd", async (guild, user) => {
         .get(entry.id)
         .ban()
         .catch(e =>
-          guild.owner.send(`**${entry.username} حاول حظر جميع الأعضاء **`)
+          guild.owner.send(`**${entry.username} Has kick Many member **`)
         );
       anti[guild.id + entry.id].actions = 0;
       fs.writeFile("./config.json", JSON.stringify(config, null, 2), function(
@@ -640,7 +717,7 @@ client.on("guildMemberRemove", async member => {
           .ban()
           .catch(e =>
             member.owner.send(
-              `**${entry.username} حاول حظر جميع الأعضاء **`
+              `**${entry.username} Has kick Many member**`
             )
           );
         anti[member.guild.id + entry.id].actions = 0;
@@ -880,41 +957,9 @@ client.on("message", message => {
 
 ////////
 
-client.on("message", msg => {
-  if (msg.content === "Slaw") {
-    msg.reply(
-      "سلاوبەخێربێی بۆ سێرفەرەکەمان تکایەچاوەرێکە تارۆل بەدەستێک دێتە خەت"
-    );
-  }
-});
-
-////////
-
-client.on("message", msg => {
-  if (msg.content === "سڵاو") {
-    msg.reply(
-      "سلاوبەخێربێی بۆ سێرفەرەکەمان تکایەچاوەرێکە تارۆل بەدەستێک دێتە خەت"
-    );
-  }
-});
-
-//////
-
-client.on("message", message => {
-  //zalm
-  if (message.content.includes("discord.gg")) {
-    if (!message.member.hasPermission("MANAGE_EMOJIS")) {
-      message.delete();
-      message.reply("جاری دووەم ڕێک باندی ئاگاداربکە تکایە ڕێکلام مەکە");
-      message.react("🚫");
-    }
-  }
-});
-
-////////
 
 client.on("message", storm => {
-  if (storm.content.startsWith(prefix + "uinvites")) {
+  if (storm.content.startsWith(prefix + "invites")) {
     storm.guild.fetchInvites().then(invs => {
       let user = storm.mentions.users.first() || storm.author;
       let personalInvites = invs.filter(i => i.inviter.id === user.id);
@@ -926,21 +971,6 @@ client.on("message", storm => {
 
 /////////
 
-client.on("message", prof => {
-  if (prof.content.startsWith(prefix + "user")) {
-    var professor = new Discord.MessageEmbed()
-      .setAuthor(client.user.username)
-      .setThumbnail(client.user.avatarURL())
-      .setColor("#0c0b0b")
-      .setTitle("Your Info User")
-      .addField(" ▶️| Your Name", `<@${prof.author.id}>`)
-      .addField(" 🆔| Your ID", `${prof.author.id}`)
-      .addField(" 🌐| Create User", prof.author.createdAt.toLocaleString())
-      .setFooter(`Requested | ${prof.author.tag}`, prof.author.avatarURL())
-      .setTimestamp();
-    prof.channel.send(professor);
-  }
-});
 
 /////////////
 
@@ -1101,30 +1131,84 @@ client.on("message", async message => {
 });
 
 ////////
-
-client.on("message", msg => {
-  if (msg.author.bot) return;
-  if (msg.content.includes("@everyone")) {
-    if (msg.member.hasPermission("MENTION_EVERYONE")) return;
-    if (!msg.channel.guild) return;
-    msg.delete();
-    msg.reply("```You cant send everyone .```");
-  }
+client.on('message', async message => {
+    if(message.content.includes('@everyone','@here',)){ 
+        if(message.member.hasPermission("MANAGE_GUILD")) return;
+if(!message.channel.guild) return;
+message.delete()
+  var command = message.content.split(" ")[0];
+let muterole = message.guild.roles.cache.find(`name`, "Muted");
+if(!muterole){
+try{
+muterole = await message.guild.createRole({
+  name: "Muted",
+  color: "#000000",
+  permissions:[]
+})
+message.guild.channels.forEach(async (channel, id) => {
+  await channel.overwritePermissions(muterole, {
+    SEND_MESSAGES: false,
+    ADD_REACTIONS: false
+  });
 });
+}catch(e){
+console.log(e.stack);
+}
+}
+   if(!message.channel.guild) return message.reply('** This command only for servers**');
+message.member.addRole(muterole);
+const embed500 = new Discord.MessageEmbed()
+.setTitle("Muted Ads")
+    .addField(`**  You Have Been Muted **` , `**Reason : Sharing Another Discord Link**`)
+    .setColor("c91616")
+    .setThumbnail(`${message.author.avatarURL}`)
+    .setAuthor(message.author.username, message.author.avatarURL())
+.setFooter(`${message.guild.name} `)
+message.channel.send(embed500)
 
-////////
 
-client.on("message", msg => {
-  if (msg.author.bot) return;
-  if (msg.content.includes("@here")) {
-    if (msg.member.hasPermission("MENTION_EVERYONE")) return;
-    if (!msg.channel.guild) return;
-    msg.delete();
-    msg.reply("```You cant send here .```");
-  }
+}
+})
+client.on('message', async message => {
+    if(message.content.includes('@everyone','@here',)){ 
+        if(message.member.hasPermission("MANAGE_GUILD")) return;
+if(!message.channel.guild) return;
+message.delete()
+  var command = message.content.split(" ")[0];
+let muterole = message.guild.roles.cache.find(`name`, "Muted");
+if(!muterole){
+try{
+muterole = await message.guild.createRole({
+  name: "Muted",
+  color: "#000000",
+  permissions:[]
+})
+message.guild.channels.forEach(async (channel, id) => {
+  await channel.overwritePermissions(muterole, {
+    SEND_MESSAGES: false,
+    ADD_REACTIONS: false
+  });
 });
+}catch(e){
+console.log(e.stack);
+}
+}
+   if(!message.channel.guild) return message.reply('** This command only for servers**');
+message.member.addRole(muterole);
+const embed500 = new Discord.MessageEmbed()
+.setTitle("Muted Ads")
+    .addField(`**  You Have Been Muted **` , `**Reason : Sharing Another Discord Link**`)
+    .setColor("c91616")
+    .setThumbnail(`${message.author.avatarURL}`)
+    .setAuthor(message.author.username, message.author.avatarURL())
+.setFooter(`${message.guild.name} `)
+message.channel.send(embed500)
 
-//////
+
+}
+})
+
+
 
 client.on("message", prof => {
   if (prof.content.startsWith(prefix + "server")) {
