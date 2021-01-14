@@ -1159,7 +1159,7 @@ console.log(e.stack);
 message.member.addRole(muterole);
 const embed500 = new Discord.MessageEmbed()
 .setTitle("Muted Ads")
-    .addField(`**  You Have Been Muted **` , `**Reason : Sharing Another Discord Link**`)
+    .addField(`**  You Have Been Muted **` , `**Reason : Type everyone and here**`)
     .setColor("c91616")
     .setThumbnail(`${message.author.avatarURL}`)
     .setAuthor(message.author.username, message.author.avatarURL())
@@ -1170,7 +1170,7 @@ message.channel.send(embed500)
 }
 })
 client.on('message', async message => {
-    if(message.content.includes('@everyone','@here',)){ 
+    if(message.content.includes('ker','maza','qn','qwz')){ 
         if(message.member.hasPermission("MANAGE_GUILD")) return;
 if(!message.channel.guild) return;
 message.delete()
@@ -1197,7 +1197,7 @@ console.log(e.stack);
 message.member.addRole(muterole);
 const embed500 = new Discord.MessageEmbed()
 .setTitle("Muted Ads")
-    .addField(`**  You Have Been Muted **` , `**Reason : Sharing Another Discord Link**`)
+    .addField(`**  You Have Been Muted **` , `**Reason : BAD WORD**`)
     .setColor("c91616")
     .setThumbnail(`${message.author.avatarURL}`)
     .setAuthor(message.author.username, message.author.avatarURL())
