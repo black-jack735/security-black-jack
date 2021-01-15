@@ -37,7 +37,7 @@ let users = JSON.parse(fs.readFileSync('./users.json' , 'utf8'));
 client.on("message", message => {
   if (message.content.startsWith(prefix + "user")) {
     if (!message.channel.guild)
-      return message.reply(`هذا الأمر فقط ل السيرفرات ❌`);
+      return message.reply(`This is command only server❌`);
     message.guild.fetchInvites().then(invs => {
       let member = client.guilds
         .get(message.guild.id)
